@@ -1,0 +1,13 @@
+* {
+    box-sizing: border-box;
+}
+
+.container {
+    display: flex;
+    gap: 30px;
+}
+
+.age-card {
+    padding: 20px;
+    border: 1px solid gray;
+}
