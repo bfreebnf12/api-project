@@ -314,16 +314,34 @@ function removeFromFavorites(dogId) {
 
 // When the user clicks the "Favorite" button
 button.addEventListener('click', () => {
-    // Toggle between "Favorite" and "Unfavorite" states
-    if (button.innerText === 'Favorite') {
-        // Handle the "Favorite" action
-        toggleFavorite(cardContainer, button, currentCardData); // Pass `currentCardData`
-        addToFavorites(currentCardData.id.toString());
-        alert(`You favorited ${currentCardData.name}`);
+    if (currentCardData && currentCardData.id !== undefined) {
+        // Check if currentCardData is not null and its id property is defined
+        // Toggle between "Favorite" and "Unfavorite" states
+        if (button.innerText === 'Favorite') {
+            // Handle the "Favorite" action
+            toggleFavorite(cardContainer, button, currentCardData);
+
+            // Check if currentCardData's id property is defined before calling .toString()
+            if (currentCardData.id !== undefined) {
+                addToFavorites(currentCardData.id.toString());
+            } else {
+                console.error("currentCardData.id is undefined, cannot perform addToFavorites.");
+            }
+            alert(`You favorited ${currentCardData.name}`);
+        } else {
+            // Handle the "Unfavorite" action
+            toggleFavorite(cardContainer, button, currentCardData);
+
+            // Check if currentCardData's id property is defined before calling .toString()
+            if (currentCardData.id !== undefined) {
+                removeFromFavorites(currentCardData.id.toString());
+            } else {
+                console.error("currentCardData.id is undefined, cannot perform removeFromFavorites.");
+            }
+        }
     } else {
-        // Handle the "Unfavorite" action
-        toggleFavorite(cardContainer, button, currentCardData); // Pass `currentCardData`
-        removeFromFavorites(currentCardData.id.toString());
+        // Handle the case when currentCardData is null or its id property is undefined
+        console.error("currentCardData is null or its id property is undefined, cannot perform action.");
     }
 });
 
