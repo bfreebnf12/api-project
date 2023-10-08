@@ -11,12 +11,19 @@ const sort = [
     // Add more sorting options as needed
 ];
 
+const sampleData1 = { id: 1, name: 'Dog 1' };
+
+// Push the sample data to the cards array
+cards.push(sampleData1);
+
+
 
 
 // Define the button element
 const button = document.getElementById('Toggle-Sort');
 let cardContainer;
-let currentCardData;
+let currentCardData = null;
+
 
 function sortCards(cards, direction) {
     if (!Array.isArray(cards) || cards.length === 0) {
@@ -88,15 +95,19 @@ function createDogCard(cardData) {
     const dogContainer = document.querySelector('.dogContainer');
     dogContainer.appendChild(cardContainer);
 
-    // Event listener for the "Favorite" button
+
+
+    // Event listener for the "Favorite" button inside createDogCard
     favoriteButton.addEventListener('click', () => {
+        currentCardData = cardData; // Update currentCardData
         toggleFavorite(cardContainer, favoriteButton, cardData);
         addToFavorites(cardData.id.toString());
         alert(`You favorited ${cardData.name}`);
     });
 
-    // Event listener for the "Unfavorite" button
+    // Event listener for the "Unfavorite" button inside createDogCard
     unfavoriteButton.addEventListener('click', () => {
+        currentCardData = cardData; // Update currentCardData
         toggleFavorite(cardContainer, unfavoriteButton, cardData);
     });
 
