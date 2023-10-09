@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./css/styles.css">
+    <title>JS Website/ API</title>
+</head>
+
+<body>
+    <main>
+        <nav>
+            <div class="sort-container">
+
+                <!-- Add more sorting options here -->
+            </div>
+            <button id="Toggle-Sort">Sort</button>
+            <h1 class="heading-title">
+                Dogs/API
+            </h1>
+            <div id="dog-section"></div>
+            <section>
+                <p>Total Dog Age: <span id="totalDogAge">0</span> years</p>
+                <div class="AgeContainer"></div>
+                <div class="age-card"></div>
+            </section>
+            <div class="container">
+                <h2>Main Collection</h2>
+                <button class="sort" data-arr="main" data-sort="asc">a-z</button>
+                <button class="sort" data-arr="main" data-sort="desc">z-a</button>
+                <div id="dogDescription"></div>
+            </div>
+
+            <div class="dogContainer">
+
+            </div>
+
+            <!--END OF MAIN-->
+            <!--item list ends-->
+    </main>
+    <section>
+        <div class="heading">
+            <h2>Favorites Collection</h2>
+            <section>
+                <div class="favoriteButton">
+                    <button class="sort" data-arr="favs" data-sort="asc">a-z</button>
+                    <button class="sort" data-arr="favs" data-sort="desc">z-a</button>
+                </div>
+            </section>
+        </div>
+        <!--item list starts-->
+        <div id="favsContainer"></div>
+        <!--item list starts-->
+    </section>
+
+
+    <script src="./main.js"></script>
+
+</body>
+
+</html>
