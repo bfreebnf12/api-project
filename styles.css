@@ -1,8 +1,203 @@
+// Attach click event listener to the toggle button
+const toggleSortButton=document.getElementById('Toggle-Sort');
+toggleSortButton.addEventListener('click', ()=> {
+    // Toggle the sorting direction
+    ascendingOrder=!ascendingOrder;
+    // Get all cards from the main container
+    let mainContainer=document.querySelector('.dogContainer');
+    favsContainer=document.getElementById('favsContainer');
+    let mainCards=Array.from(mainContainer.querySelectorAll('.card'));
+    const sortBtns=document.querySelectorAll('.sort');
+    console.log(mainContainer.children) // Inside the event listener, you can now call sortCards
+    mainCards=Array.from(mainContainer.children).filter( (item)=> item.tagName.toLowerCase()==='div');
+    let favCards=Array.from(favsContainer.children).filter( (item)=> item.tagName.toLowerCase()==='div');
+    sortBtns.forEach((button)=> {
+        const parent=button.addEventListener('click', (e)=> {
+            const arrToSort=e.target.dataset.arr==='main' ? mainCards: favCards;
+            const parent=e.target.dataset.arr==='main' ? mainContainer: favsContainer;
+            const direction=e.target.dataset.sort;
+            const sortedItems=sortCards(arrToSort, direction);
+            // Clear the parent container
+            while (parent.firstChild) {
+                parent.removeChild(parent.firstChild);
+            }
+            // Append the sorted cards to the parent container
+            sortedItems.forEach((item)=> parent.appendChild(item));
+        }
+        );
+    }
+    );
+    // sortedItems.forEach((item) => parent.append(item));
+}
+
+);
+
+/*mainCards = Array.from(mainContainer.children).filter(
+    (item) => item.tagName.toLowerCase() === 'div'
+);
+favCards = Array.from(favsContainer.children).filter(
+    (item) => item.tagName.toLowerCase() === 'div'
+); */
+
+// Sort the cards and pass the sorting direction
+sortCards(mainCards, ascendingOrder ? 'asc': 'desc');
+// Toggle the sorting direction
+ascendingOrder=!ascendingOrder;
+// Get all cards from the main container
+mainContainer=document.querySelector('.dogContainer');
+mainCards=Array.from(mainContainer.querySelectorAll('.card'));
+// Sort the cards and pass the sorting direction
+sortCards(mainCards, ascendingOrder ? 'asc': 'desc');
+// Clear both containers
+let favCards=[];
+// Separate the sorted cards into their respective containers
+sort.forEach(card=> {
+    const parent= //console.log(button);
+    button.addEventListener('click', (e)=> {
+        const arrToSort=e.target.dataset.arr==='main' ? mainCards: favCards;
+        const parent=e.target.dataset.arr==='main' ? mainContainer: favsContainer;
+        const direction=e.target.dataset.sort;
+        const sortedItems=sortCards(arrToSort, direction);
+        console.log(sortedItems);
+        sortedItems.forEach((item)=> parent.append(item));
+    }
+    );
+}
+
+);
+// Attach click event listener to the toggle button
+toggleSortButton.addEventListener('click', ()=> {
+    sortCards();
+}
+
+);
+// Function to toggle favorite/unfavorite
+function toggleFavorite(card, button, cardData) {
+    const favoritesContainer=document.getElementById('favs');
+    const mainContainer=document.querySelector('.dogContainer');
+    if (button.innerText==='Favorite') {
+        if (mainContainer.contains(card)) {
+            mainContainer.removeChild(card);
+        }
+        else if (favoritesContainer.contains(card)) {
+            favoritesContainer.removeChild(card);
+        }
+        favoritesContainer.appendChild(card);
+        button.innerText='Unfavorite';
+        cardData.inFavorites=true;
+    }
+    else if (button.innerText==='Unfavorite') {
+        if (favoritesContainer.contains(card)) {
+            favoritesContainer.removeChild(card);
+        }
+        else if (mainContainer.contains(card)) {
+            mainContainer.removeChild(card);
+        }
+        mainContainer.appendChild(card);
+        button.innerText='Favorite';
+        cardData.inFavorites=false;
+    }
+}
+
+// Function to add to favorites
+function addToFavorites(dogId) {
+    localStorage.setItem(`$ {
+        dogId
+    }
+    `, "true");
+}
+
+// Function to remove from favorites
+function removeFromFavorites(dogId) {
+    localStorage.removeItem(`$ {
+        dogId
+    }
+    `);
+}
+
+// When the user clicks the "Favorite" button
+button.addEventListener('click', ()=> {
+    // Toggle between "Favorite" and "Unfavorite" states
+    if (button.innerText==='Favorite') {
+        // Handle the "Favorite" action
+        toggleFavorite(cardContainer, button, currentCardData); // Pass `currentCardData`
+        addToFavorites(currentCardData.id.toString());
+        alert(`You favorited $ {
+            currentCardData.name
+        }
+        `);
+    }
+    else {
+        // Handle the "Unfavorite" action
+        toggleFavorite(cardContainer, button, currentCardData); // Pass `currentCardData`
+        removeFromFavorites(currentCardData.id.toString());
+    }
+}
+
+);
+const targetClass='card';
+73 changes: 73 additions & 0 deletions73 styles.css @@ -0,
+0+1,
+73 @@
+/* styles.css */
+
+
+/* Reset styles and container */
+
 * {
+    margin: 0;
+    padding: 0;
     box-sizing: border-box;
 }
 
+.heading-title {
+    text-align: center;
+}
+
+body {
+    font-family: Arial, sans-serif;
+}
+
 .container {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.card {
+    padding: 20px;
+    border: 1px solid gray;
+}
+
+
+/* Style the dog card container */
+
+.dog {
+    background: white;
+    width: 300px;
+    padding: 20px;
+    margin: 20px;
+    border: 1px solid #ccc;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.createCard img {
+    max-width: 100%;
+    /* Ensure the image fits inside the card */
+    height: auto;
+}
+
+.dog:hover {
+    transform: scale(1.05);
+}
+
+.AgeContainer {
     display: flex;
     gap: 30px;
 }
@@ -10,4 +205,10 @@
 .age-card {
     padding: 20px;
     border: 1px solid gray;
+}
+
+.favoriteButton,
+.removeButton {
+    display: flex;
+    gap: 5px;
 }

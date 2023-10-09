@@ -98,6 +98,7 @@ function createDogCard(cardData) {
         toggleFavorite(cardContainer, favoriteButton, cardData);
         addToFavorites(cardData.id.toString());
         alert(`You favorited ${cardData.name}`);
+        console.log(toggleFavorite)
     });
 
     // Event listener for the "Unfavorite" button inside createDogCard
@@ -164,32 +165,37 @@ function getDogs() {
 // Call getDogs to fetch and create dog cards
 getDogs();
 
-// Add event listeners to each sorting button
-const setSortBtnListeners = () => {
-    const sortButtons = document.querySelectorAll('.sort');
-    sortButtons.forEach((button) => {
-        button.addEventListener('click', (e) => {
-            // Extract the necessary information from the button's data attributes
-            const mainCardsContainer = document.querySelector('.dogContainer');
-            const mainCardsArr = mainCardsContainer.querySelectorAll('.card');
-            console.log(mainCardsArr);
-            const favCardsContainer = document.getElementById('favsContainer');
-            const favCardsArr = favCardsContainer.querySelectorAll('.card');
-            console.log(favCardsArr);
-            const arrToSort = e.target.dataset.arr; // 'main' or 'favs'
-            const sortingDirection = e.target.dataset.sort; // 'asc' or 'desc'
+// Attach click event listener to the toggle button
+const toggleSortButton = document.getElementById('Toggle-Sort');
+toggleSortButton.addEventListener('click', () => {
+            // Toggle the sorting direction
+            ascendingOrder = !ascendingOrder;
 
-            // Call the sortCards function with the selected array and sorting direction
-            const params =
-                arrToSort === 'main' ?
-                [mainCardsArr, mainCardsContainer] :
-                [favCardsArr, favCardsContainer];
+            // Get all cards from the main container
+            let mainContainer = document.querySelector('.dogContainer');
+            favsContainer = document.getElementById('favsContainer');
+            let mainCards = Array.from(mainContainer.querySelectorAll('.card'));
+            const sortBtns = document.querySelectorAll('.sort');
 
-            const sortedItems = sortCards(params[0], sortingDirection);
-            // Append the sorted cards to the parent container
-            sortedItems.forEach((item) => params[1].append(item));
-        });
-    });
+            console.log(mainContainer.children)
+                // Inside the event listener, you can now call sortCards
+            mainCards = Array.from(mainContainer.children).filter(
+                (item) => item.tagName.toLowerCase() === 'div'
+            );
+            let favCards = Array.from(favsContainer.children).filter(
+                (item) => item.tagName.toLowerCase() === 'div'
+            );
 
-    // sortedItems.forEach((item) => parent.append(item));
-};
+            sortBtns.forEach((button) => {
+                        const parent =
+                            button.addEventListener('click', (e) => {
+                                    const arrToSort = e.target.dataset.arr === 'main' ? mainCards : favCards;
+                                    const parent =
+                                        e.target.dataset.arr === 'main' ? mainContainer : favsContainer;
+                                    const direction = e.target.dataset.sort;
+                                    const sortedItems = sortCards(arrToSort, direction);
+
+                                    // Clear the parent container
+                                    while (parent.firstChild) {
+                                        parent.removeChild(parent.firstChild);
+                                    };
