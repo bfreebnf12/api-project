@@ -3,6 +3,7 @@ let ascendingOrder = true;
 let favsContainer;
 let mainCards = [];
 let cards = [];
+let favoriteCardIds = []; // Define the favoriteCardIds array
 
 //Define sort
 const sort = [
@@ -22,11 +23,7 @@ let cardContainer;
 let currentCardData = null;
 
 function sortCards(cards, direction) {
-    // console.log(cards);
-    // if (!cards.length) {
-    //   console.error('Invalid or empty cards array:', cards);
-    //   return;
-    // }
+
 
     return Array.from(cards).sort((a, b) => {
         const nameA = a.querySelector('.dog-name').innerText.toLowerCase();
@@ -71,10 +68,11 @@ function createDogCard(cardData) {
     breed.innerText = `Breed: ${cardData.breed}`;
     breed.style.marginBottom = '10px';
 
-    // Create two button elements for "Favorite" and "Unfavorite"
+    // Create a button for "Favorite" (only in the main collection)
     const favoriteButton = document.createElement('button');
     favoriteButton.innerText = 'Favorite';
 
+    // Create a button for "Unfavorite" (only in the favorite collection)
     const unfavoriteButton = document.createElement('button');
     unfavoriteButton.innerText = 'Unfavorite';
 
@@ -85,12 +83,37 @@ function createDogCard(cardData) {
 
     // Append elements to cardContainer
     cardContainer.appendChild(dogInfoContainer);
-    cardContainer.appendChild(favoriteButton);
-    cardContainer.appendChild(unfavoriteButton);
+
+    // Append "Favorite" or "Unfavorite" button based on the collection
+    if (cardData.favorite) {
+        cardContainer.appendChild(unfavoriteButton); // In the favorite collection
+    } else {
+        cardContainer.appendChild(favoriteButton); // In the main collection
+    }
 
     // Append the card to the dog container
     const dogContainer = document.querySelector('.dogContainer');
     dogContainer.appendChild(cardContainer);
+
+    function addToFavorites(cardId) {
+        favoriteCardIds.push(cardId);
+    }
+
+    function toggleFavorite(cardContainer, button, cardData) {
+        const isFavorited = cardData.favorite || false;
+
+        if (isFavorited) {
+            cardData.favorite = false;
+            button.innerText = 'Favorite';
+            cardContainer.classList.remove('favorited');
+        } else {
+
+            cardData.favorite = true;
+            button.innerText = 'Unfavorite';
+            cardContainer.classList.add('favorited');
+            addToFavorites(cardData.id.toString());
+        }
+    }
 
     // Event listener for the "Favorite" button inside createDogCard
     favoriteButton.addEventListener('click', () => {
@@ -98,13 +121,22 @@ function createDogCard(cardData) {
         toggleFavorite(cardContainer, favoriteButton, cardData);
         addToFavorites(cardData.id.toString());
         alert(`You favorited ${cardData.name}`);
-        console.log(toggleFavorite)
+
+        // Move the card to the favorites container
+        if (cardData.favorite) {
+            favsContainer.appendChild(cardContainer);
+        }
     });
 
     // Event listener for the "Unfavorite" button inside createDogCard
     unfavoriteButton.addEventListener('click', () => {
         currentCardData = cardData; // Update currentCardData
         toggleFavorite(cardContainer, unfavoriteButton, cardData);
+
+        // Move the card back to the main container
+        if (!cardData.favorite) {
+            mainContainer.appendChild(cardContainer);
+        }
     });
 
     return cardContainer;
@@ -149,10 +181,9 @@ function getDogs() {
                     (total, dog) => total + (dog.age || 0),
                     0
                 );
-                console.log('Total Dog Age:', totalDogAge); // Log the total dog age once
-
-                // Log or display the total dog age
-                console.log('Total Dog Age:', totalDogAge);
+                //Displaythe total dog age on the page
+                const totalDogAgeElement = document.getElementById('totalDogAge');
+                totalDogAgeElement.textContent = `Total Dog Age: ${totalDogAge}`;
             } else {
                 console.error('No valid dog data found.');
             }
@@ -165,37 +196,33 @@ function getDogs() {
 // Call getDogs to fetch and create dog cards
 getDogs();
 
-// Attach click event listener to the toggle button
-const toggleSortButton = document.getElementById('Toggle-Sort');
-toggleSortButton.addEventListener('click', () => {
-            // Toggle the sorting direction
-            ascendingOrder = !ascendingOrder;
 
-            // Get all cards from the main container
-            let mainContainer = document.querySelector('.dogContainer');
-            favsContainer = document.getElementById('favsContainer');
-            let mainCards = Array.from(mainContainer.querySelectorAll('.card'));
-            const sortBtns = document.querySelectorAll('.sort');
 
-            console.log(mainContainer.children)
-                // Inside the event listener, you can now call sortCards
-            mainCards = Array.from(mainContainer.children).filter(
-                (item) => item.tagName.toLowerCase() === 'div'
-            );
-            let favCards = Array.from(favsContainer.children).filter(
-                (item) => item.tagName.toLowerCase() === 'div'
-            );
 
-            sortBtns.forEach((button) => {
-                        const parent =
-                            button.addEventListener('click', (e) => {
-                                    const arrToSort = e.target.dataset.arr === 'main' ? mainCards : favCards;
-                                    const parent =
-                                        e.target.dataset.arr === 'main' ? mainContainer : favsContainer;
-                                    const direction = e.target.dataset.sort;
-                                    const sortedItems = sortCards(arrToSort, direction);
+// Add event listeners to each sorting button
+const setSortBtnListeners = () => {
+    const sortButtons = document.querySelectorAll('.sort');
+    sortButtons.forEach((button) => {
+        button.addEventListener('click', (e) => {
+            // Extract the necessary information from the button's data attributes
+            const mainCardsContainer = document.querySelector('.dogContainer');
+            const mainCardsArr = mainCardsContainer.querySelectorAll('.card');
+            console.log(mainCardsArr);
+            const favCardsContainer = document.getElementById('favsContainer');
+            const favCardsArr = favCardsContainer.querySelectorAll('.card');
+            console.log(favCardsArr);
+            const arrToSort = e.target.dataset.arr; // 'main' or 'favs'
+            const sortingDirection = e.target.dataset.sort; // 'asc' or 'desc'
 
-                                    // Clear the parent container
-                                    while (parent.firstChild) {
-                                        parent.removeChild(parent.firstChild);
-                                    };
+            // Call the sortCards function with the selected array and sorting direction
+            const params =
+                arrToSort === 'main' ? [mainCardsArr, mainCardsContainer] : [favCardsArr, favCardsContainer];
+
+            const sortedItems = sortCards(params[0], sortingDirection);
+            // Append the sorted cards to the parent container
+            sortedItems.forEach((item) => params[1].append(item));
+        });
+    });
+
+    // sortedItems.forEach((item) => parent.append(item));
+};
