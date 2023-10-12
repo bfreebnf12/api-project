@@ -39,11 +39,7 @@ function moveCardToMain(cardContainer) {
 
 
 function createDogCard(cardData) {
-    console.log(cardData[`_id`]);
-    if (cardData.age) {
-        dogAge += cardData.age;
-    }
-    cardContainer = document.createElement('div'); // Assign value to cardContainer
+    const cardContainer = document.createElement('div');
     cardContainer.setAttribute('class', 'card');
 
     const dogInfoContainer = document.createElement('div');
@@ -62,7 +58,7 @@ function createDogCard(cardData) {
     // Create a div for the dog's name
     const name = document.createElement('div');
     name.innerText = `Name: ${cardData.name}`;
-    name.classList.add('dog-name'); // Add a class for sorting
+    name.classList.add('dog-name');
 
     // Create a div for the dog's breed
     const breed = document.createElement('div');
@@ -92,15 +88,16 @@ function createDogCard(cardData) {
         cardContainer.appendChild(favoriteButton); // In the main collection
     }
 
+
     // Event listener for the "Favorite" button
     favoriteButton.addEventListener('click', () => {
         toggleFavorite(cardContainer, favoriteButton, cardData);
         addToFavorites(cardData['_id']);
+        moveCardToFavorites(cardContainer);
     });
 
     // Event listener for the "Unfavorite" button
     unfavoriteButton.addEventListener('click', () => {
-        // Call the toggleFavorite function to handle the unfavorite action
         toggleFavorite(cardContainer, unfavoriteButton, cardData);
         removeFromFavorites(cardData['_id']);
         moveCardToMain(cardContainer); // Move the card to the main collection
@@ -117,10 +114,10 @@ function createDogCard(cardData) {
         addToFavorites(cardData['_id']);
         moveCardToFavorites(cardContainer);
     });
-
     unfavoriteButton.addEventListener('click', () => {
-        // Call the toggleFavorite function to handle the unfavorite action
-        toggleFavorite(unfavoriteButton, cardData);
+        toggleFavorite(cardContainer, unfavoriteButton, cardData);
+        removeFromFavorites(cardData['_id']);
+        moveCardToMain(cardContainer); // Move the card to the main collection
     });
 
 
@@ -170,12 +167,10 @@ function toggleFavorite(cardContainer, button, cardData) {
         cardData.favorite = false;
         button.innerText = 'Favorite';
         cardContainer.classList.remove('favorited');
-        moveCardToMain(cardContainer); // Move the card to the main collection
     } else {
         cardData.favorite = true;
         button.innerText = 'Unfavorite';
         cardContainer.classList.add('favorited');
-        moveCardToFavorites(cardContainer); // Move the card to the favorites collection
     }
 
     // After toggling the favorite status, update the favorite button states
