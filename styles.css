@@ -8,10 +8,14 @@
 
 .heading-title {
     text-align: center;
+    font-family: cursive;
+    font-size: 25px;
+    font-weight: bold;
 }
 
 body {
     font-family: Arial, sans-serif;
+    background: lightskyblue;
 }
 
 .container {
@@ -67,4 +71,23 @@ body {
 .removeButton {
     display: flex;
     gap: 5px;
+}
+
+.favorite-button {
+    border-radius: 5px;
+    font-weight: bold;
+    width: 100px;
+    font-size: 15px;
+    background-color: white;
+}
+
+.sort {
+    font-size: 20px;
+    font-weight: bold;
+    background-color: white;
+}
+
+#totalDogAge {
+    font-size: 20px;
+    font-weight: bold;
 }

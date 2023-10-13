@@ -6,7 +6,7 @@ let cards = [];
 let favoriteCardIds = [];
 
 // Define the button element
-const button = document.getElementById('Toggle-Sort');
+const button = document.getElementById('.toggle');
 let cardContainer;
 let currentCardData = null;
 
@@ -31,9 +31,10 @@ function moveCardToFavorites(cardContainer) {
 }
 
 function moveCardToMain(cardContainer) {
-    const mainContainer = document.getElementById('mainContainer');
+    const mainContainer = document.getElementById('container');
     if (mainContainer) {
         mainContainer.appendChild(cardContainer);
+        console.log('Card moved to main container');
     }
 }
 
@@ -68,10 +69,12 @@ function createDogCard(cardData) {
     // Create a button for "Favorite" (only in the main collection)
     const favoriteButton = document.createElement('button');
     favoriteButton.innerText = 'Favorite';
+    favoriteButton.classList.add('favorite-button');
 
     // Create a button for "Unfavorite" (only in the favorite collection)
     const unfavoriteButton = document.createElement('button');
     unfavoriteButton.innerText = 'Unfavorite';
+    favoriteButton.classList.add('unfavorite-button');
 
     // Append elements to dogInfoContainer
     dogInfoContainer.appendChild(image);
@@ -98,22 +101,24 @@ function createDogCard(cardData) {
 
     // Event listener for the "Unfavorite" button
     unfavoriteButton.addEventListener('click', () => {
-        toggleFavorite(cardContainer, unfavoriteButton, cardData);
-        removeFromFavorites(cardData['_id']);
-        moveCardToMain(cardContainer); // Move the card to the main collection
+        return Array.from(button).forEach((button) => {
+            button.addEventListener('click', (e) => {
+                console.log(e.target.parentElement.parentElement);
+                if (e.target.parentElement.parentElement.id === 'container') {
+                    favsContainer.append(e.target.parentElement);
+                    button.innerHTML = 'Unfavorite';
+                } else {
+                    container.append(e.target.parentElement);
+                    button.innerHTML = 'favorite';;
+                }
+            })
+        })
     });
-
 
     // Append the card to the dog container
     const dogContainer = document.querySelector('.dogContainer');
     dogContainer.appendChild(cardContainer);
 
-    // Event listener for the "Favorite" button
-    favoriteButton.addEventListener('click', () => {
-        toggleFavorite(cardContainer, favoriteButton, cardData);
-        addToFavorites(cardData['_id']);
-        moveCardToFavorites(cardContainer);
-    });
     unfavoriteButton.addEventListener('click', () => {
         toggleFavorite(cardContainer, unfavoriteButton, cardData);
         removeFromFavorites(cardData['_id']);
@@ -125,23 +130,20 @@ function createDogCard(cardData) {
         favoriteCardIds.push(cardId);
     }
 
-    // Event listener for the "Favorite" button inside createDogCard
-    favoriteButton.addEventListener('click', (e) => {
-        const favsContainer = document.getElementById('favsContainer');
-        const cardToMove = e.target.parentElement;
-        favsContainer.append(cardToMove);
-
-        // Move the card to the favorites container
+    // Event listener for the "Favorite" and "Unfavorite" buttons
+    favoriteButton.addEventListener('click', () => {
+        toggleFavorite(cardContainer, cardData);
         if (cardData.favorite) {
-            console.log(favsContainer);
-            favsContainer.appendChild(cardContainer);
+            moveCardToFavorites(cardContainer);
+        } else {
+            moveCardToMain(cardContainer);
         }
     });
 
 
-
     return cardContainer;
 }
+
 
 function updateFavoriteButtonState() {
     // Update buttons in the favorites collection to "Unfavorite"
@@ -162,18 +164,19 @@ function updateFavoriteButtonState() {
 // Call the function when initially loading the page
 updateFavoriteButtonState();
 
-function toggleFavorite(cardContainer, button, cardData) {
+function toggleFavorite(cardContainer, cardData) {
     if (cardData.favorite) {
         cardData.favorite = false;
-        button.innerText = 'Favorite';
         cardContainer.classList.remove('favorited');
     } else {
         cardData.favorite = true;
-        button.innerText = 'Unfavorite';
         cardContainer.classList.add('favorited');
     }
 
-    // After toggling the favorite status, update the favorite button states
+    // After toggling the favorite status, update the favorite button text
+    const unfavoriteButton = cardContainer.querySelector('button');
+    unfavoriteButton.innerText = cardData.favorite ? 'Unfavorite' : 'Favorite';
+
     updateFavoriteButtonState();
 }
 
