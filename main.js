@@ -137,18 +137,7 @@ function updateFavoriteButtonState(containerName) {
     });
 
 
-    // const favCardsContainer = document.getElementById('favsContainer');
-    // const favoriteButtonsInFavs = favCardsContainer.querySelectorAll('.card button');
-    // favoriteButtonsInFavs.forEach((button) => {
-    //     button.innerText = 'Unfavorite';
-    // });
 
-    // // Update buttons in the main collection to "Favorite"
-    // const mainCardsContainer = document.querySelector('.dogContainer');
-    // const favoriteButtonsInMain = mainCardsContainer.querySelectorAll('.card button');
-    // favoriteButtonsInMain.forEach((button) => {
-    //     button.innerText = 'Favorite';
-    // });
 }
 
 // Call the function when initially loading the page
