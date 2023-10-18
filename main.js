@@ -26,7 +26,7 @@ function moveCardToFavorites(cardContainer) {
 }
 
 function moveCardToMain(cardContainer) {
-    const mainContainer = document.getElementById('container');
+    const mainContainer = document.getElementById('mainContainer');
     if (mainContainer) {
         mainContainer.appendChild(cardContainer);
         console.log('Card moved to main container');

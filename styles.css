@@ -9,10 +9,6 @@
     box-sizing: border-box;
 }
 
-.heading-title {
-    text-align: center;
-}
-
 body {
     font-family: Arial, sans-serif;
     background-color: lightskyblue;
@@ -47,7 +43,7 @@ body {
     transition: transform 0.2s;
 }
 
-.createCard img {
+.card img {
     max-width: 100%;
     /* Ensure the image fits inside the card */
     height: auto;
